@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Lekki Headmaster 2027 - Flexi Educational Consult</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #25d366;
+            --accent-hover: #22bf5b;
+            --bg-color: #ffffff;
+            --card-bg: #ffffff;
+            --text-main: #334155;
+            --text-muted: #64748b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 36px 28px;
+            text-align: center;
+            max-width: 420px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Flexi Educational Consult Logo & Header */
+        .consult-logo {
+            max-height: 48px;
+            width: auto;
+            object-fit: contain;
+            margin: 0 auto 10px auto;
+            display: block;
+        }
+
+        .consult-header-name {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        /* The Lekki Headmaster Image Styling (Square & Centered) */
+        .headmaster-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 12px; /* Slight rounded corners for a clean square look */
+            object-fit: cover;
+            border: 2px solid #e2e8f0;
+            margin: 0 auto 20px auto;
+            display: block;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            line-height: 1.3;
+        }
+
+        p {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.5;
+            margin: 0 0 28px 0;
+        }
+
+        .btn {
+            background-color: var(--accent);
+            color: white;
+            padding: 16px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .loader-container {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #e2e8f0;
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 12px auto;
+        }
+
+        .status-text {
+            color: var(--text-main);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <!-- Flexi Educational Consult Header (Logo on top, Text below) -->
+        <div>
+            <!-- REPLACE THE SRC LINK BELOW WITH YOUR FLEXI CONSULT LOGO LINK -->
+            <img src="https://i.postimg.cc/0Qm3PLw5/1771700279759-2.jpg" alt="Flexi Educational Consult Logo" class="consult-logo">
+            <div class="consult-header-name">Flexi Educational Consult</div>
+        </div>
+
+        <!-- The Lekki Headmaster Image (Square & Centered) -->
+        <!-- REPLACE THE SRC LINK BELOW WITH THE LEKKI HEADMASTER SQUARE IMAGE LINK -->
+        <img src="https://i.postimg.cc/HsrJNn92/images-(62).jpg" alt="The Lekki Headmaster" class="headmaster-img">
+
+        <h1>The Lekki Headmaster 2027</h1>
+        <p>Join our structured study chapters. You will be automatically balanced into the next available group.</p>
+        
+        <button class="btn" id="joinBtn" onclick="assignToGroup()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 4.8 4.8 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8.9h0a8.4 8.4 0 0 1 7.6 4.7 8.38 8.38 0 0 1 .9 3.8z"></path></svg>
+            Join Study Chapter
+        </button>
+
+        <div class="loader-container" id="loaderContainer">
+            <div class="spinner"></div>
+            <div class="status-text" id="statusText">Finding your balanced chapter...</div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Modular v10+) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, runTransaction } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // TODO: Replace with your actual Firebase project configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB_f2RsnULFKvhczqCyOjJO3mukcXxrEF0",
+  authDomain: "the-lekki-headmaster-a4160.firebaseapp.com",
+  projectId: "the-lekki-headmaster-a4160",
+  storageBucket: "the-lekki-headmaster-a4160.firebasestorage.app",
+  messagingSenderId: "591238709588",
+  appId: "1:591238709588:web:c21728b3983c7b79eb88c1",
+  measurementId: "G-DFXDFY087S"
+};
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const TOTAL_GROUPS = 12;
+        const MAX_MEMBERS_PER_GROUP = 5;
+
+        const whatsappLinks = {
+            1: "https://chat.whatsapp.com/IL394mo5FRk0q217hmBHcN",
+            2: "https://chat.whatsapp.com/HDITwZkWtL5GrMAKcdYyDn",
+            3: "https://chat.whatsapp.com/DAGHAXePmzP7XFN2bccfge",
+            4: "https://chat.whatsapp.com/ByscxwbE1oCDVikrQ4chwG",
+            5: "https://chat.whatsapp.com/Lq9FeRQHCk1306Zj8tIGvn",
+            6: "https://chat.whatsapp.com/BitkByv1tEDH0kZ3Mn9L34",
+            7: "https://chat.whatsapp.com/GHavcLKBbza7FF8I4RfZMg",
+            8: "https://chat.whatsapp.com/GavTeMkbEf5A41pEtii59y",
+            9: "https://chat.whatsapp.com/Gr0NOQu9mCG8Md5ErHgFMk",
+            10: "https://chat.whatsapp.com/Jbn0LpXbTeCAp8lcSvzEUg",
+            11: "https://chat.whatsapp.com/KKA99L46MEfIGUP4UqKGZZ",
+            12: "https://chat.whatsapp.com/CQju5KoTKfyBVfRWthsx2G"
+        };
+
+        window.assignToGroup = async function() {
+            const btn = document.getElementById("joinBtn");
+            const loaderContainer = document.getElementById("loaderContainer");
+            const statusText = document.getElementById("statusText");
+
+            btn.style.display = "none";
+            loaderContainer.style.display = "block";
+
+            try {
+                let assignedGroup = null;
+
+                await runTransaction(db, async (transaction) => {
+                    let groupSnapshots = [];
+
+                    for (let i = 1; i <= TOTAL_GROUPS; i++) {
+                        const groupRef = doc(db, "study_chapters", `chapter_${i}`);
+                        const groupSnap = await transaction.get(groupRef);
+                        groupSnapshots.push({ id: i, ref: groupRef, snap: groupSnap });
+                    }
+
+                    let targetGroup = null;
+                    let minCount = Infinity;
+
+                    for (let item of groupSnapshots) {
+                        let currentCount = item.snap.exists() ? item.snap.data().count : 0;
+                        
+                        if (currentCount < MAX_MEMBERS_PER_GROUP && currentCount < minCount) {
+                            minCount = currentCount;
+                            targetGroup = item;
+                        }
+                    }
+
+                    if (targetGroup) {
+                        assignedGroup = targetGroup.id;
+                        const newCount = minCount + 1;
+
+                        if (!targetGroup.snap.exists()) {
+                            transaction.set(targetGroup.ref, { count: newCount });
+                        } else {
+                            transaction.update(targetGroup.ref, { count: newCount });
+                        }
+                    }
+                });
+
+                if (assignedGroup) {
+                    statusText.innerHTML = `Success! Assigned to Chapter ${assignedGroup}. Redirecting...`;
+                    setTimeout(() => {
+                        window.location.href = whatsappLinks[assignedGroup];
+                    }, 1200);
+                } else {
+                    statusText.innerHTML = "All chapters (1-12) have reached capacity!";
+                    btn.style.display = "flex";
+                    document.querySelector('.spinner').style.display = "none";
+                }
+
+            } catch (error) {
+                console.error("Error joining group: ", error);
+                statusText.innerHTML = "Something went wrong. Please try again.";
+                btn.style.display = "flex";
+                document.querySelector('.spinner').style.display = "none";
+            }
+        };
+    </script>
+</body>
+</html>
